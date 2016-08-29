@@ -1,11 +1,11 @@
-/// <reference path="../typings/socket.io/socket.io.d.ts" />
 /// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/globals/jquery/index.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/socket.io-client/socket.io-client.d.ts" />
 "use strict";
 const jquery = require("jquery");
 const euglena_template_1 = require("euglena.template");
 const euglena_1 = require("euglena");
-const io = require("socket.io");
+const io = require("socket.io-client");
 var Exception = euglena_1.euglena.sys.type.Exception;
 const OrganelleName = "ReceptionOrganelleImplHttp";
 let this_ = null;

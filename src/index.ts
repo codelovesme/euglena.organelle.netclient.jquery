@@ -1,7 +1,7 @@
 
-/// <reference path="../typings/socket.io/socket.io.d.ts" />
 /// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/globals/jquery/index.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/socket.io-client/socket.io-client.d.ts" />
 
 
 "use strict";
@@ -9,7 +9,7 @@ import * as jquery from "jquery";
 import {euglena_template} from "euglena.template";
 import {euglena} from "euglena";
 import Particle = euglena.being.Particle;
-import * as io from "socket.io";
+import * as io from "socket.io-client";
 import Exception = euglena.sys.type.Exception;
 
 
@@ -88,7 +88,7 @@ export class Organelle extends euglena_template.being.alive.organelle.NetClientO
         this.triedToConnect.set(euglenaInfo.data.name, true);
         let server = io("http://" + post_options.host + ":" + post_options.port);
         this.servers[euglenaInfo.data.name] = server;
-        server.on("connect", (socket: SocketIO.Socket) => {
+        server.on("connect", (socket: SocketIOClient.Socket) => {
             server.emit("bind", new euglena_template.being.alive.particle.EuglenaInfo({ name: this_.sapContent.euglenaName, url: "", port: "" }, this_.sapContent.euglenaName), (done: boolean) => {
                 if (done) {
                     this_.send(new euglena_template.being.alive.particle.ConnectedToEuglena(euglenaInfo, this_.name));

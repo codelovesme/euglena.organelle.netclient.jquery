@@ -1,6 +1,6 @@
-/// <reference path="../typings/socket.io/socket.io.d.ts" />
 /// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/globals/jquery/index.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/socket.io-client/socket.io-client.d.ts" />
 import { euglena_template } from "euglena.template";
 import { euglena } from "euglena";
 import Particle = euglena.being.Particle;
