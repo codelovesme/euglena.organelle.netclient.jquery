@@ -36,6 +36,7 @@ export class Organelle extends euglena_template.being.alive.organelle.NetClientO
         });
         addAction(euglena_template.being.alive.constants.particles.NetClientOrganelleSap, (particle) => {
             this_.sapContent = particle.data;
+            this.send(new euglena_template.being.alive.particle.OrganelleHasComeToLife(this_.name, this_.sapContent.euglenaName), this_.name);
         });
     }
     private throwImpact(to: euglena_template.being.alive.particle.EuglenaInfo, impact: euglena.being.interaction.Impact): void {
