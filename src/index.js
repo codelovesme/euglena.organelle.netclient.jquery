@@ -87,7 +87,9 @@ class Organelle extends euglena_template_1.euglena_template.being.alive.organell
             });
             server.on("impact", (impactAssumption, callback) => {
                 if (euglena_1.euglena.js.Class.instanceOf(euglena_template_1.euglena_template.reference.being.interaction.Impact, impactAssumption)) {
-                    this.send(new euglena_template_1.euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
+                    if (euglena_1.euglena.being.StaticTools.validateParticle(impactAssumption.particle)) {
+                        this.send(new euglena_template_1.euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
+                    }
                 }
                 else {
                 }
