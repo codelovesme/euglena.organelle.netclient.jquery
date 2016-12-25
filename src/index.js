@@ -51,7 +51,9 @@ class Organelle extends euglena_template_1.euglena_template.being.alive.organell
                     try {
                         let impactAssumption = JSON.parse(message);
                         if (euglena_1.euglena.js.Class.instanceOf(euglena_template_1.euglena_template.reference.being.interaction.Impact, impactAssumption)) {
-                            this_.send(new euglena_template_1.euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
+                            if (euglena_1.euglena.js.Class.instanceOf(euglena_template_1.euglena_template.reference.being.Particle, impactAssumption.particle)) {
+                                this.send(new euglena_template_1.euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
+                            }
                         }
                         else {
                         }
