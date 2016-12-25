@@ -1,6 +1,3 @@
-/// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/socket.io-client/socket.io-client.d.ts" />
 "use strict";
 const jquery = require("jquery");
 const euglena_template_1 = require("euglena.template");

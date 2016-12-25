@@ -1,9 +1,4 @@
 
-/// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/socket.io-client/socket.io-client.d.ts" />
-
-
 "use strict";
 import * as jquery from "jquery";
 import { euglena_template } from "euglena.template";
