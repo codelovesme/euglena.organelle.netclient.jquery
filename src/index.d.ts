@@ -10,8 +10,8 @@ export declare class Organelle extends euglena_template.being.alive.organelle.Ne
     private triedToConnect;
     private sapContent;
     constructor();
-    protected bindActions(addAction: (particleName: string, action: (particle: Particle) => void) => void): void;
-    private throwImpact(to, impact);
+    protected bindActions(addAction: (particleName: string, action: (particle: Particle, callback: euglena.being.interaction.Callback) => void) => void): void;
+    private throwImpact(to, impact, callback);
     private connectToEuglena(euglenaInfo);
 }
 export declare class HttpRequestManager {

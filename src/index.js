@@ -20,18 +20,20 @@ class Organelle extends euglena_template_1.euglena_template.being.alive.organell
         addAction(euglena_template_1.euglena_template.being.alive.constants.particles.ConnectToEuglena, (particle) => {
             this_.connectToEuglena(particle.data);
         });
-        addAction(euglena_template_1.euglena_template.being.alive.constants.particles.ThrowImpact, (particle) => {
-            this_.throwImpact(particle.data.to, particle.data.impact);
+        addAction(euglena_template_1.euglena_template.being.alive.constants.particles.ThrowImpact, (particle, callback) => {
+            this_.throwImpact(particle.data.to, particle.data.impact, callback);
         });
         addAction(euglena_template_1.euglena_template.being.alive.constants.particles.NetClientOrganelleSap, (particle) => {
             this_.sapContent = particle.data;
             this.send(new euglena_template_1.euglena_template.being.alive.particle.OrganelleHasComeToLife(this_.name, this_.sapContent.euglenaName), this_.name);
         });
     }
-    throwImpact(to, impact) {
+    throwImpact(to, impact, callback) {
         let server = this.servers[to.data.name];
         if (server) {
-            server.emit("impact", impact);
+            server.emit("impact", impact, (impact) => {
+                callback(new euglena_template_1.euglena_template.being.alive.particle.ImpactReceived(impact, this_.sapContent.euglenaName));
+            });
         }
         else {
             var post_options = {
@@ -87,7 +89,7 @@ class Organelle extends euglena_template_1.euglena_template.being.alive.organell
             });
             server.on("impact", (impactAssumption, callback) => {
                 if (euglena_1.euglena.js.Class.instanceOf(euglena_template_1.euglena_template.reference.being.interaction.Impact, impactAssumption)) {
-                    if (euglena_1.euglena.being.StaticTools.validateParticle(impactAssumption.particle)) {
+                    if (euglena_1.euglena.js.Class.instanceOf(euglena_template_1.euglena_template.reference.being.Particle, impactAssumption.particle)) {
                         this.send(new euglena_template_1.euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
                     }
                 }
