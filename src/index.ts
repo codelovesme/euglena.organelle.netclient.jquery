@@ -1,4 +1,6 @@
 
+/// <reference path="../typings/index.d.ts" />
+
 "use strict";
 import * as jquery from "jquery";
 import { euglena_template } from "euglena.template";
