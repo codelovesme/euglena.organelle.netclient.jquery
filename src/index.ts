@@ -97,13 +97,7 @@ export class Organelle extends euglena_template.being.alive.organelle.NetClientO
                 }
             });
             server.on("impact", (impactAssumption: any, callback: (impact: euglena.being.interaction.Impact) => void) => {
-                if (euglena.js.Class.instanceOf<euglena.being.interaction.Impact>(euglena_template.reference.being.interaction.Impact, impactAssumption)) {
-                    if (euglena.js.Class.instanceOf<euglena.being.Particle>(euglena_template.reference.being.Particle, impactAssumption.particle)) {
-                        this.send(new euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
-                    }
-                } else {
-                    //TODO
-                }
+                this.send(new euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
             });
         });
         server.on("disconnect", () => {

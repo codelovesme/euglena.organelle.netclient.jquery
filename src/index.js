@@ -15,10 +15,11 @@ var this_ = null;
 var Organelle = (function (_super) {
     __extends(Organelle, _super);
     function Organelle() {
-        _super.call(this, OrganelleName);
-        this_ = this;
-        this.servers = {};
-        this.triedToConnect = new euglena_1.euglena.sys.type.Map();
+        var _this = _super.call(this, OrganelleName) || this;
+        this_ = _this;
+        _this.servers = {};
+        _this.triedToConnect = new euglena_1.euglena.sys.type.Map();
+        return _this;
     }
     Organelle.prototype.bindActions = function (addAction) {
         var _this = this;
@@ -97,13 +98,7 @@ var Organelle = (function (_super) {
                 }
             });
             server.on("impact", function (impactAssumption, callback) {
-                if (euglena_1.euglena.js.Class.instanceOf(euglena_template_1.euglena_template.reference.being.interaction.Impact, impactAssumption)) {
-                    if (euglena_1.euglena.js.Class.instanceOf(euglena_template_1.euglena_template.reference.being.Particle, impactAssumption.particle)) {
-                        _this.send(new euglena_template_1.euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
-                    }
-                }
-                else {
-                }
+                _this.send(new euglena_template_1.euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
             });
         });
         server.on("disconnect", function () {
