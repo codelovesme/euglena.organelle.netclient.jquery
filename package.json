@@ -13,5 +13,9 @@
     "euglena.template": "codelovesme/euglena.template",
     "jquery": "^3.1.0",
     "socket.io-client": "^1.4.8"
+  },
+  "devDependencies": {
+    "@types/jquery": "^2.0.43",
+    "@types/socket.io-client": "^1.4.29"
   }
 }

@@ -1,14 +1,13 @@
 
-/// <reference path="../typings/index.d.ts" />
-
 "use strict";
 import * as jquery from "jquery";
-import { euglena_template } from "euglena.template";
-import { euglena } from "euglena";
-import Particle = euglena.being.Particle;
+import { sys, js } from "cessnalib";
+import { euglena_template } from "@euglena/template";
+import * as euglena from "@euglena/core";
+import Particle = euglena.ParticleV1;
 import * as io from "socket.io-client";
-import Exception = euglena.sys.type.Exception;
-import Impact = euglena.being.interaction.Impact;
+import Exception = sys.type.Exception;
+import Impact = euglena.interaction.Impact;
 
 const OrganelleName = "ReceptionOrganelleImplHttp";
 
@@ -16,15 +15,15 @@ let this_: Organelle = null;
 export class Organelle extends euglena_template.being.alive.organelle.NetClientOrganelle {
     private servers: any;
     private httpConnector: HttpRequestManager;
-    private triedToConnect: euglena.sys.type.Map<string, boolean>;
+    private triedToConnect: sys.type.Map<string, boolean>;
     private sapContent: euglena_template.being.alive.particle.NetClientOrganelleSapContent;
     constructor() {
         super(OrganelleName);
         this_ = this;
         this.servers = {};
-        this.triedToConnect = new euglena.sys.type.Map<string, boolean>();
+        this.triedToConnect = new sys.type.Map<string, boolean>();
     }
-    protected bindActions(addAction: (particleName: string, action: (particle: Particle, callback: euglena.being.interaction.Callback) => void) => void): void {
+    protected bindActions(addAction: (particleName: string, action: (particle: Particle, callback: euglena.interaction.Callback) => void) => void): void {
         addAction(euglena_template.being.alive.constants.particles.ConnectToEuglena, (particle) => {
             this_.connectToEuglena(particle.data);
         });
@@ -36,11 +35,11 @@ export class Organelle extends euglena_template.being.alive.organelle.NetClientO
             this.send(new euglena_template.being.alive.particle.OrganelleHasComeToLife(this_.name, this_.sapContent.euglenaName), this_.name);
         });
     }
-    private throwImpact(to: euglena_template.being.alive.particle.EuglenaInfo, impact: euglena.being.interaction.Impact, callback: (particle: Particle) => void): void {
+    private throwImpact(to: euglena_template.being.alive.particle.EuglenaInfo, impact: euglena.interaction.Impact, callback: (particle: Particle) => void): void {
         let server = this.servers[to.data.name];
         if (server) {
             server.emit("impact", impact, (impact: Impact) => {
-                callback(new euglena_template.being.alive.particle.ImpactReceived(impact, this_.sapContent.euglenaName));
+                callback(impact);
             });
         } else {
             var post_options = {
@@ -54,16 +53,10 @@ export class Organelle extends euglena_template.being.alive.organelle.NetClientO
             };
             let httpConnector = new HttpRequestManager(post_options);
             httpConnector.sendMessage(JSON.stringify(impact), (message: any) => {
-                if (euglena.sys.type.StaticTools.Exception.isNotException<string>(message)) {
+                if (sys.type.StaticTools.Exception.isNotException<string>(message)) {
                     try {
                         let impactAssumption = JSON.parse(message);
-                        if (euglena.js.Class.instanceOf(euglena_template.reference.being.interaction.Impact, impactAssumption)) {
-                            if (euglena.js.Class.instanceOf<euglena.being.Particle>(euglena_template.reference.being.Particle, impactAssumption.particle)) {
-                                this.send(new euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
-                            }
-                        } else {
-                            //TODO log
-                        }
+                        this.send(impactAssumption, this_.name);
                     } catch (e) {
                         //TODO
                     }
@@ -96,8 +89,8 @@ export class Organelle extends euglena_template.being.alive.organelle.NetClientO
                     this_.send(new euglena_template.being.alive.particle.ConnectedToEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
                 }
             });
-            server.on("impact", (impactAssumption: any, callback: (impact: euglena.being.interaction.Impact) => void) => {
-                this.send(new euglena_template.being.alive.particle.ImpactReceived(impactAssumption, this_.sapContent.euglenaName), this_.name);
+            server.on("impact", (impactAssumption: any, callback: (impact: euglena.interaction.Impact) => void) => {
+                this.send(impactAssumption, this_.name);
             });
         });
         server.on("disconnect", () => {
@@ -108,7 +101,7 @@ export class Organelle extends euglena_template.being.alive.organelle.NetClientO
 
 export class HttpRequestManager {
     constructor(public post_options: any) { }
-    public sendMessage(message: string, callback: euglena.sys.type.Callback<string>): void {
+    public sendMessage(message: string, callback: sys.type.Callback<string>): void {
         var req = jquery.post(this.post_options.url, (data, textStatus, jqXHR) => {
             if (textStatus === "200") {
                 callback(data);
