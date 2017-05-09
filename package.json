@@ -8,6 +8,7 @@
   },
   "author": "codelovesme",
   "license": "GPL v2",
+  "typings": "./src/index.d.ts",
   "dependencies": {
     "euglena": "codelovesme/euglena#develop",
     "euglena.template": "codelovesme/euglena.template",
