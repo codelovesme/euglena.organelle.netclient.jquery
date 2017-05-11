@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var jquery = require("jquery");
 var cessnalib_1 = require("cessnalib");
-var template_1 = require("@euglena/template");
+var euglena_template = require("@euglena/template");
 var io = require("socket.io-client");
 var Exception = cessnalib_1.sys.type.Exception;
 var OrganelleName = "ReceptionOrganelleImplHttp";
@@ -28,15 +28,15 @@ var Organelle = (function (_super) {
     }
     Organelle.prototype.bindActions = function (addAction) {
         var _this = this;
-        addAction(template_1.euglena_template.being.alive.constants.particles.ConnectToEuglena, function (particle) {
+        addAction(euglena_template.alive.constants.particles.ConnectToEuglena, function (particle) {
             this_.connectToEuglena(particle.data);
         });
-        addAction(template_1.euglena_template.being.alive.constants.particles.ThrowImpact, function (particle, callback) {
+        addAction(euglena_template.alive.constants.particles.ThrowImpact, function (particle, callback) {
             this_.throwImpact(particle.data.to, particle.data.impact, callback);
         });
-        addAction(template_1.euglena_template.being.alive.constants.particles.NetClientOrganelleSap, function (particle) {
+        addAction(euglena_template.alive.constants.particles.NetClientOrganelleSap, function (particle) {
             this_.sapContent = particle.data;
-            _this.send(new template_1.euglena_template.being.alive.particle.OrganelleHasComeToLife(this_.name, this_.sapContent.euglenaName), this_.name);
+            _this.send(new euglena_template.alive.particle.OrganelleHasComeToLife(this_.name, this_.sapContent.euglenaName), this_.name);
         });
     };
     Organelle.prototype.throwImpact = function (to, impact, callback) {
@@ -70,7 +70,7 @@ var Organelle = (function (_super) {
                 }
                 else {
                     //TODO write a eligable exception message
-                    this_.send(new template_1.euglena_template.being.alive.particle.Exception(new Exception(""), this_.sapContent.euglenaName), this_.name);
+                    this_.send(new euglena_template.alive.particle.Exception(new Exception(""), this_.sapContent.euglenaName), this_.name);
                 }
             });
             if (!this.servers[to.data.name] && !this.triedToConnect.get(to.data.name)) {
@@ -92,9 +92,9 @@ var Organelle = (function (_super) {
         var server = io("http://" + post_options.host + ":" + post_options.port);
         this.servers[euglenaInfo.data.name] = server;
         server.on("connect", function (socket) {
-            server.emit("bind", new template_1.euglena_template.being.alive.particle.EuglenaInfo({ name: this_.sapContent.euglenaName, url: "", port: "" }, this_.sapContent.euglenaName), function (done) {
+            server.emit("bind", new euglena_template.alive.particle.EuglenaInfo({ name: this_.sapContent.euglenaName, url: "", port: "" }, this_.sapContent.euglenaName), function (done) {
                 if (done) {
-                    this_.send(new template_1.euglena_template.being.alive.particle.ConnectedToEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
+                    this_.send(new euglena_template.alive.particle.ConnectedToEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
                 }
             });
             server.on("impact", function (impactAssumption, callback) {
@@ -102,11 +102,11 @@ var Organelle = (function (_super) {
             });
         });
         server.on("disconnect", function () {
-            this_.send(new template_1.euglena_template.being.alive.particle.DisconnectedFromEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
+            this_.send(new euglena_template.alive.particle.DisconnectedFromEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
         });
     };
     return Organelle;
-}(template_1.euglena_template.being.alive.organelle.NetClientOrganelle));
+}(euglena_template.alive.organelle.NetClientOrganelle));
 exports.Organelle = Organelle;
 var HttpRequestManager = (function () {
     function HttpRequestManager(post_options) {

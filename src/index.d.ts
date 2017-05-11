@@ -1,8 +1,8 @@
 import { sys } from "cessnalib";
-import { euglena_template } from "@euglena/template";
+import * as euglena_template from "@euglena/template";
 import * as euglena from "@euglena/core";
 import Particle = euglena.ParticleV1;
-export declare class Organelle extends euglena_template.being.alive.organelle.NetClientOrganelle {
+export declare class Organelle extends euglena_template.alive.organelle.NetClientOrganelle {
     private servers;
     private httpConnector;
     private triedToConnect;
