@@ -92,19 +92,21 @@ var Organelle = /** @class */ (function (_super) {
             'Content-Type': 'application/json'
         };
         this.triedToConnect.set(euglenaInfo.data.name, true);
-        var socketio = io();
-        this.servers[euglenaInfo.data.name] = socketio;
-        socketio.on("connect", function (socket) {
-            socketio.emit("bind", new euglena_template.alive.particle.EuglenaInfo({ name: this_.sapContent.euglenaName, url: "", port: "" }, this_.sapContent.euglenaName), function (done) {
+        var server = io("https://" + post_options.host + ":" + post_options.port, {
+            transports: ['websocket']
+        });
+        this.servers[euglenaInfo.data.name] = server;
+        server.on("connect", function (socket) {
+            server.emit("bind", new euglena_template.alive.particle.EuglenaInfo({ name: this_.sapContent.euglenaName, url: "", port: "" }, this_.sapContent.euglenaName), function (done) {
                 if (done) {
                     this_.send(new euglena_template.alive.particle.ConnectedToEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
                 }
             });
-            socketio.on("impact", function (impactAssumption, callback) {
+            server.on("impact", function (impactAssumption, callback) {
                 _this.send(impactAssumption, this_.name);
             });
         });
-        socketio.on("disconnect", function () {
+        server.on("disconnect", function () {
             this_.send(new euglena_template.alive.particle.DisconnectedFromEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
         });
     };

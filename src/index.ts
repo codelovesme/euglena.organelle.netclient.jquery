@@ -81,19 +81,21 @@ export class Organelle extends euglena_template.alive.organelle.NetClientOrganel
             'Content-Type': 'application/json'
         };
         this.triedToConnect.set(euglenaInfo.data.name, true);
-        let socketio = io();
-        this.servers[euglenaInfo.data.name] = socketio;
-        socketio.on("connect", (socket: SocketIOClient.Socket) => {
-            socketio.emit("bind", new euglena_template.alive.particle.EuglenaInfo({name: this_.sapContent.euglenaName, url: "", port: ""}, this_.sapContent.euglenaName), (done: boolean) => {
+        let server = io("https://" + post_options.host + ":" + post_options.port, {
+            transports: ['websocket']
+        });
+        this.servers[euglenaInfo.data.name] = server;
+        server.on("connect", (socket: SocketIOClient.Socket) => {
+            server.emit("bind", new euglena_template.alive.particle.EuglenaInfo({name: this_.sapContent.euglenaName, url: "", port: ""}, this_.sapContent.euglenaName), (done: boolean) => {
                 if (done) {
                     this_.send(new euglena_template.alive.particle.ConnectedToEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
                 }
             });
-            socketio.on("impact", (impactAssumption: any, callback: (impact: euglena.interaction.Impact) => void) => {
+            server.on("impact", (impactAssumption: any, callback: (impact: euglena.interaction.Impact) => void) => {
                 this.send(impactAssumption, this_.name);
             });
         });
-        socketio.on("disconnect", () => {
+        server.on("disconnect", () => {
             this_.send(new euglena_template.alive.particle.DisconnectedFromEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
         });
     }
