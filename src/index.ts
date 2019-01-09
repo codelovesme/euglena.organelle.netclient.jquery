@@ -81,9 +81,7 @@ export class Organelle extends euglena_template.alive.organelle.NetClientOrganel
             'Content-Type': 'application/json'
         };
         this.triedToConnect.set(euglenaInfo.data.name, true);
-        let server = io("https://" + post_options.host + ":" + post_options.port, {
-            transports: ['websocket']
-        });
+        let server = io("http://" + post_options.host + ":" + post_options.port);
         this.servers[euglenaInfo.data.name] = server;
         server.on("connect", (socket: SocketIOClient.Socket) => {
             server.emit("bind", new euglena_template.alive.particle.EuglenaInfo({name: this_.sapContent.euglenaName, url: "", port: ""}, this_.sapContent.euglenaName), (done: boolean) => {

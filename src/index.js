@@ -92,9 +92,7 @@ var Organelle = /** @class */ (function (_super) {
             'Content-Type': 'application/json'
         };
         this.triedToConnect.set(euglenaInfo.data.name, true);
-        var server = io("https://" + post_options.host + ":" + post_options.port, {
-            transports: ['websocket']
-        });
+        var server = io("http://" + post_options.host + ":" + post_options.port);
         this.servers[euglenaInfo.data.name] = server;
         server.on("connect", function (socket) {
             server.emit("bind", new euglena_template.alive.particle.EuglenaInfo({ name: this_.sapContent.euglenaName, url: "", port: "" }, this_.sapContent.euglenaName), function (done) {
