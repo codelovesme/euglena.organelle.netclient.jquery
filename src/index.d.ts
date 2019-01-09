@@ -9,8 +9,8 @@ export declare class Organelle extends euglena_template.alive.organelle.NetClien
     private sapContent;
     constructor();
     protected bindActions(addAction: (particleName: string, action: (particle: Particle, callback: euglena.interaction.Callback) => void) => void): void;
-    private throwImpact(to, impact, callback);
-    private connectToEuglena(euglenaInfo);
+    private throwImpact;
+    private connectToEuglena;
 }
 export declare class HttpRequestManager {
     post_options: any;

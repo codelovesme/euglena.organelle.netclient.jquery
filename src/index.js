@@ -1,8 +1,11 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -17,7 +20,7 @@ var io = require("socket.io-client");
 var Exception = cessnalib_1.sys.type.Exception;
 var OrganelleName = "ReceptionOrganelleImplHttp";
 var this_ = null;
-var Organelle = (function (_super) {
+var Organelle = /** @class */ (function (_super) {
     __extends(Organelle, _super);
     function Organelle() {
         var _this = _super.call(this, OrganelleName) || this;
@@ -89,26 +92,26 @@ var Organelle = (function (_super) {
             'Content-Type': 'application/json'
         };
         this.triedToConnect.set(euglenaInfo.data.name, true);
-        var server = io("http://" + post_options.host + ":" + post_options.port);
-        this.servers[euglenaInfo.data.name] = server;
-        server.on("connect", function (socket) {
-            server.emit("bind", new euglena_template.alive.particle.EuglenaInfo({ name: this_.sapContent.euglenaName, url: "", port: "" }, this_.sapContent.euglenaName), function (done) {
+        var socketio = io();
+        this.servers[euglenaInfo.data.name] = socketio;
+        socketio.on("connect", function (socket) {
+            socketio.emit("bind", new euglena_template.alive.particle.EuglenaInfo({ name: this_.sapContent.euglenaName, url: "", port: "" }, this_.sapContent.euglenaName), function (done) {
                 if (done) {
                     this_.send(new euglena_template.alive.particle.ConnectedToEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
                 }
             });
-            server.on("impact", function (impactAssumption, callback) {
+            socketio.on("impact", function (impactAssumption, callback) {
                 _this.send(impactAssumption, this_.name);
             });
         });
-        server.on("disconnect", function () {
+        socketio.on("disconnect", function () {
             this_.send(new euglena_template.alive.particle.DisconnectedFromEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
         });
     };
     return Organelle;
 }(euglena_template.alive.organelle.NetClientOrganelle));
 exports.Organelle = Organelle;
-var HttpRequestManager = (function () {
+var HttpRequestManager = /** @class */ (function () {
     function HttpRequestManager(post_options) {
         this.post_options = post_options;
     }

@@ -1,7 +1,7 @@
 
 "use strict";
 import * as jquery from "jquery";
-import { sys, js } from "cessnalib";
+import {sys, js} from "cessnalib";
 import * as euglena_template from "@euglena/template";
 import * as euglena from "@euglena/core";
 import Particle = euglena.ParticleV1;
@@ -81,26 +81,26 @@ export class Organelle extends euglena_template.alive.organelle.NetClientOrganel
             'Content-Type': 'application/json'
         };
         this.triedToConnect.set(euglenaInfo.data.name, true);
-        let server = io("http://" + post_options.host + ":" + post_options.port);
-        this.servers[euglenaInfo.data.name] = server;
-        server.on("connect", (socket: SocketIOClient.Socket) => {
-            server.emit("bind", new euglena_template.alive.particle.EuglenaInfo({ name: this_.sapContent.euglenaName, url: "", port: "" }, this_.sapContent.euglenaName), (done: boolean) => {
+        let socketio = io();
+        this.servers[euglenaInfo.data.name] = socketio;
+        socketio.on("connect", (socket: SocketIOClient.Socket) => {
+            socketio.emit("bind", new euglena_template.alive.particle.EuglenaInfo({name: this_.sapContent.euglenaName, url: "", port: ""}, this_.sapContent.euglenaName), (done: boolean) => {
                 if (done) {
                     this_.send(new euglena_template.alive.particle.ConnectedToEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
                 }
             });
-            server.on("impact", (impactAssumption: any, callback: (impact: euglena.interaction.Impact) => void) => {
+            socketio.on("impact", (impactAssumption: any, callback: (impact: euglena.interaction.Impact) => void) => {
                 this.send(impactAssumption, this_.name);
             });
         });
-        server.on("disconnect", () => {
+        socketio.on("disconnect", () => {
             this_.send(new euglena_template.alive.particle.DisconnectedFromEuglena(euglenaInfo, this_.sapContent.euglenaName), this_.name);
         });
     }
 }
 
 export class HttpRequestManager {
-    constructor(public post_options: any) { }
+    constructor(public post_options: any) {}
     public sendMessage(message: string, callback: sys.type.Callback<string>): void {
         var req = jquery.post(this.post_options.url, (data, textStatus, jqXHR) => {
             if (textStatus === "200") {
